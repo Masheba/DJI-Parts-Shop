@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AGRAS PARTS — каталог запчастей</title>
+<style>
+:root{--bg:#f5f6f7;--card:#fff;--text:#172026;--muted:#6b737b;--line:#e2e6e9;--accent:#1b7f4b;--dark:#13231b}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--dark);color:#fff;padding:28px 5vw}.top{max-width:1400px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:26px;font-weight:800;letter-spacing:.5px}.brand span{color:#79d69c}.sub{color:#b8c5be;margin-top:6px;font-size:14px}
+main{max-width:1400px;margin:26px auto;padding:0 5vw}.bar{display:grid;grid-template-columns:1fr 220px 150px;gap:12px;margin-bottom:18px}
+input,select,button{height:46px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 14px;font-size:14px}button{cursor:pointer}.primary{background:var(--accent);color:#fff;border:0;font-weight:700}
+.layout{display:grid;grid-template-columns:250px 1fr;gap:22px}.sidebar,.card{background:var(--card);border:1px solid var(--line);border-radius:14px}.sidebar{padding:18px;height:max-content}.sidebar h3{margin:0 0 14px}.cat{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f0f1f2;color:#3e464d;cursor:pointer}.cat b{font-size:12px;color:var(--muted)}
+.meta{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px;color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.card{padding:17px;display:flex;flex-direction:column;min-height:390px}.photo{height:180px;border-radius:10px;background:#f7f8f8;border:1px solid #eef0f1;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:12px}.photo img{width:100%;height:100%;object-fit:contain}.photo-note{font-size:10px;color:#8a9298;margin-top:-5px;margin-bottom:8px}.tag{display:inline-block;background:#edf7f1;color:#176b40;border-radius:7px;padding:5px 8px;font-size:11px;font-weight:700;margin-bottom:10px;width:max-content}.sku{font-size:12px;color:var(--muted);font-family:monospace}.name{font-size:16px;font-weight:750;line-height:1.3;margin:8px 0}.en{font-size:12px;color:var(--muted);min-height:31px}.compat{font-size:12px;margin-top:12px}.bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:end;gap:10px}.price{font-size:19px;font-weight:800}.small{font-size:11px;color:var(--muted)}.cart{position:fixed;right:22px;bottom:22px;background:#fff;border:1px solid var(--line);box-shadow:0 8px 30px #0002;border-radius:14px;padding:14px 16px;min-width:220px}.empty{padding:50px;text-align:center;color:var(--muted);background:#fff;border-radius:14px;border:1px solid var(--line)}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.sidebar{display:none}}
+@media(max-width:650px){.bar{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.top{display:block}}
+</style></head>
+<body>
+<header><div class="top"><div><div class="brand">AGRAS <span>PARTS</span></div><div class="sub">Каталог запчастей и расходников для DJI AGRAS</div></div><div id="count"></div></div></header>
+<main>
+<div class="bar"><input id="q" placeholder="Поиск по артикулу, названию..."><select id="cat"><option value="">Все узлы</option></select><button id="clear">Сбросить</button></div>
+<div class="layout"><aside class="sidebar"><h3>Категории</h3><div id="cats"></div></aside><section><div class="meta"><span id="result"></span><select id="sort"><option value="default">По умолчанию</option><option value="priceUp">Цена ↑</option><option value="priceDown">Цена ↓</option><option value="name">Название</option></select></div><div id="grid" class="grid"></div></section></div>
+</main>
+<div class="cart">🛒 <b>Корзина:</b> <span id="cartCount">0</span><div class="small">Товары сохраняются в браузере</div></div>
+<script>
+const parts=[
+  {
+    "sku": "BC.AG.SS000668",
+    "name": "Двигатель 10033 Propulsion Motor для Agras T50",
+    "name_en": "Propulsion Motor",
+    "category": "Моторы и приводы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 24156,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_001.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000700",
+    "name": "Модуль ESC для DJI Agras T50",
+    "name_en": "ESC Module",
+    "category": "Электроника и управление",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 22143,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_002.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS005016",
+    "name": "Пара лопастей Upper Propeller (CCW)",
+    "name_en": "Upper Propeller (CCW) PAIR",
+    "category": "Пропеллеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 7198,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_003.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS005018",
+    "name": "Пара лопастей Upper Propeller (CCW)",
+    "name_en": "Upper Propeller (CCW) PAIR",
+    "category": "Пропеллеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 7198,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_004.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS005017",
+    "name": "Пара лопастей Upper Propeller (CCW)",
+    "name_en": "Upper Propeller (CCW) PAIR",
+    "category": "Пропеллеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 7198,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_005.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS005019",
+    "name": "Пара лопастей Upper Propeller (CCW)",
+    "name_en": "Upper Propeller (CCW) PAIR",
+    "category": "Пропеллеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 7198,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_006.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003829",
+    "name": "Проставка под лопасти",
+    "name_en": "Propeller Gasket",
+    "category": "Пропеллеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 131.94,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_007.jpg"
+  },
+  {
+    "sku": "YC.JG.QX002177",
+    "name": "Нижний зажим пропеллера DJI",
+    "name_en": "Lower Propeller Adapter",
+    "category": "Пропеллеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1464,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_008.jpg"
+  },
+  {
+    "sku": "YC.JG.QX002715",
+    "name": "Верхний зажим пропеллера DJI",
+    "name_en": "Upper Propeller Adapter",
+    "category": "Пропеллеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1708,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_009.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003399",
+    "name": "Корпус атомайзера (задний)",
+    "name_en": "Spray Lance Shell (Rear)",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1525,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_010.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000752",
+    "name": "Гайка крепления атомайзера Agras T50",
+    "name_en": "Spray Lance Nut",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 854,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_011.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000707",
+    "name": "Соленоид атомайзера Agras T50",
+    "name_en": "Solenoid Valve Module",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 6588,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_012.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003460",
+    "name": "Гайка атомайзера Agras T50",
+    "name_en": "Hose Nut (M15)",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 366,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_013.jpg"
+  },
+  {
+    "sku": "YC.XC.XX001000",
+    "name": "Кабель атомайзера Agras T50",
+    "name_en": "Atomized Sprinkler Adapter Cable (Rear)",
+    "category": "Кабели и разъёмы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2745,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_014.jpg"
+  },
+  {
+    "sku": "YC.JG.JS000031",
+    "name": "Трубка подачи пестицидов (задний атомайзер)",
+    "name_en": "Spray Lance Bellow Hose (Rear)",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 671,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_015.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003458",
+    "name": "Нижний диск атомайзера Agras T50",
+    "name_en": "Spinner Disk Lower Disk",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1586,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_016.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003459",
+    "name": "Верхний диск атомайзера Agras T50",
+    "name_en": "Spinner Disk Upper Disk",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 671,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_017.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000565",
+    "name": "Двигатель атомайзера Agras",
+    "name_en": "Centrifugal Motor",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 20252,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_018.jpg"
+  },
+  {
+    "sku": "YC.JG.MY000712",
+    "name": "Прокладка центробежного клапана Agras T40/T50",
+    "name_en": "Centrifugal Valve Rubber Pad",
+    "category": "Уплотнения и прокладки",
+    "compatibility": [
+      "T40",
+      "T50"
+    ],
+    "price": 305,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_019.jpg"
+  },
+  {
+    "sku": "YC.JG.MY000704",
+    "name": "Уплотнительное кольцо двигателя атомайзера Agras T50/T40/T20P",
+    "name_en": "Motor Sealing Ring",
+    "category": "Уплотнения и прокладки",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 488,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_020.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS002289",
+    "name": "Кронштейн пружины центробежного сопла Agras",
+    "name_en": "Centrifugal Sprinkler Spring Bracket",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 427,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_021.jpg"
+  },
+  {
+    "sku": "YC.JG.FM000092",
+    "name": "Барашек крепления тарелочек форсунки",
+    "name_en": "Centrifugal Sprinkler Thumb Nut",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 244,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_022.jpg"
+  },
+  {
+    "sku": "SPRAY-LANCE",
+    "name": "Атомайзер Agras T50 в сборе",
+    "name_en": "Spray Lance",
+    "category": "Система распыления",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 27633,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_023.jpg"
+  },
+  {
+    "sku": "YC.JG.QX003097",
+    "name": "Кронштейн крепления двигателя (низ) Agras T50",
+    "name_en": "Motor Base (Lower)",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1403,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_024.jpg"
+  },
+  {
+    "sku": "YC.JG.QX003096",
+    "name": "Кронштейн крепления двигателя (верх) Agras T50",
+    "name_en": "Motor Base (Upper)",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1403,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_025.jpg"
+  },
+  {
+    "sku": "YC.JG.QX002088",
+    "name": "Втулка замка Agras T40/T50",
+    "name_en": "Locking Piece Connection Rod",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T40",
+      "T50"
+    ],
+    "price": 854,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_026.jpg"
+  },
+  {
+    "sku": "YC.JG.QX002089",
+    "name": "Вал защелки замка Agras T40/T50",
+    "name_en": "Locking Piece Aircraft Arm Shaft",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T40",
+      "T50"
+    ],
+    "price": 915,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_027.jpg"
+  },
+  {
+    "sku": "YC.JG.QX003012",
+    "name": "Защелка крепления луча Agras T50",
+    "name_en": "Locking Piece Handle",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2318,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_028.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000701",
+    "name": "Модуль защелки крепления луча Agras T50",
+    "name_en": "Buckle Module",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1037,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_029.jpg"
+  },
+  {
+    "sku": "YC.JG.TT000165",
+    "name": "Пружина защелки замка",
+    "name_en": "Buckle Torsion Spring",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 305,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_030.jpg"
+  },
+  {
+    "sku": "YC.JG.QX003014",
+    "name": "Втулка защелки замка луча",
+    "name_en": "Buckle Rotation Shaft",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 244,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_031.jpg"
+  },
+  {
+    "sku": "YC.JG.BJ002409",
+    "name": "Зажим 6мм",
+    "name_en": "E-Shaped Circlip (6 mm)",
+    "category": "Крепёж",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 122,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_032.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003560",
+    "name": "Резиновая втулка защелки луча Agras T50",
+    "name_en": "Locking Piece Handle Rubber Sleeve",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 305,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_033.jpg"
+  },
+  {
+    "sku": "YC.JG.CS000020",
+    "name": "Соединитель (180 градусов) Agras T50",
+    "name_en": "Elbow Connector (180 Degrees)",
+    "category": "Шланги, трубки и фитинги",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 610,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_034.jpg"
+  },
+  {
+    "sku": "YC.JG.JS000030",
+    "name": "Трубка подачи рабочего раствора Agras T50",
+    "name_en": "Aircraft Arm Hose",
+    "category": "Шланги, трубки и фитинги",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 793,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_035.jpg"
+  },
+  {
+    "sku": "YC.XC.DD000572",
+    "name": "Композитный кабель луча M3/M4 для Agras T50",
+    "name_en": "M3&M4 Aircraft Arm ESC Composite Cable",
+    "category": "Кабели и разъёмы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 11651,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_036.jpg"
+  },
+  {
+    "sku": "YC.JG.MY001062",
+    "name": "Резиновый рукав шланга Agras T50",
+    "name_en": "Hose Rubber Sleeve",
+    "category": "Шланги, трубки и фитинги",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 427,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_037.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS002379",
+    "name": "Защитный кожух двигателя Agras T40/T50",
+    "name_en": "Motor Upper Cover",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T40",
+      "T50"
+    ],
+    "price": 1220,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_038.jpg"
+  },
+  {
+    "sku": "YC.XC.DD000573",
+    "name": "Композитный кабель луча M1/M2 для Agras T50",
+    "name_en": "M1&M2 Aircraft Arm ESC Composite Cable",
+    "category": "Кабели и разъёмы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 8784,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_039.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000972",
+    "name": "Модуль расходомера DJI Agras T50",
+    "name_en": "Flow Meter Module",
+    "category": "Насосы и расходомеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 26352,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_040.jpg"
+  },
+  {
+    "sku": "YC.XC.XX001004",
+    "name": "Сигнальный кабель расходомера Agras T50",
+    "name_en": "Flow Meter Signal Cable",
+    "category": "Кабели и разъёмы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2257,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_041.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003478",
+    "name": "Переходник расходомера Agras T50",
+    "name_en": "Hose Curving Connector (M15)",
+    "category": "Насосы и расходомеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 488,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_042.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003594",
+    "name": "Гайка Agras T50",
+    "name_en": "Thumb Nut",
+    "category": "Крепёж",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 305,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_043.jpg"
+  },
+  {
+    "sku": "YC.JG.JS000032",
+    "name": "Патрубок расходомера подачи рабочего раствора (короткий)",
+    "name_en": "Flow Meter Water Inlet Hose",
+    "category": "Насосы и расходомеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 732,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_044.jpg"
+  },
+  {
+    "sku": "YC.JG.JS000033",
+    "name": "Патрубок расходомера подачи рабочего раствора (длинный)",
+    "name_en": "Flow Meter Water Outlet Hose",
+    "category": "Насосы и расходомеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 732,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_045.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000543",
+    "name": "Двигатель помпы/насоса Agras T50",
+    "name_en": "Impeller Pump Motor",
+    "category": "Насосы и расходомеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 22692,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_046.jpg"
+  },
+  {
+    "sku": "YC.XC.XX001002",
+    "name": "Кабель помпы Agras T50",
+    "name_en": "Spraying Signal Cable",
+    "category": "Кабели и разъёмы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 3111,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_047.jpg"
+  },
+  {
+    "sku": "YC.JG.MY001052",
+    "name": "Уплотнительное кольцо помпы Agras T50/T70/T70P/T100",
+    "name_en": "Pump Sealing Ring",
+    "category": "Уплотнения и прокладки",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 488,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_048.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000471",
+    "name": "Датчик уровня бака распыления Agras",
+    "name_en": "T Spray Tank Liquid Level Meter",
+    "category": "Бак и система подачи жидкости",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2318,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_049.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000709",
+    "name": "Нижний датчик уровня в баке AGRAS T50",
+    "name_en": "Liquid Level Gauge Sensor Module",
+    "category": "Бак и система подачи жидкости",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 5612,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_050.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS002251",
+    "name": "Крышка бака распыления Agras",
+    "name_en": "Spray Tank Cover",
+    "category": "Бак и система подачи жидкости",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1586,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_051.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000673",
+    "name": "Кабель с тензодатчиками системы взвешивания T50",
+    "name_en": "Weighing Sensor Module",
+    "category": "Бак и система подачи жидкости",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 13054,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_052.jpg"
+  },
+  {
+    "sku": "YC.JG.MY001011",
+    "name": "Вставка тензодатчика системы взвешивания T50",
+    "name_en": "Weighing Sensor Rubber Cover",
+    "category": "Уплотнения и прокладки",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 549,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_053.jpg"
+  },
+  {
+    "sku": "YC.XC.XX001009",
+    "name": "Кабель системы распыления (Distribution Board-Spraying Module)",
+    "name_en": "Communicate Cable",
+    "category": "Кабели и разъёмы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 3294,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_054.jpg"
+  },
+  {
+    "sku": "YC.JG.BJ001821",
+    "name": "Шасси Agras T50",
+    "name_en": "Landing Gear Aluminum Tube",
+    "category": "Шасси",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 10736,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_055.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003467",
+    "name": "Крепление шасси к раме T50 заднее правое",
+    "name_en": "Landing Gear Fixing Piece (Rear Right)",
+    "category": "Шасси",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2684,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_056.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003466",
+    "name": "Крепление шасси к раме T50 заднее левое",
+    "name_en": "Landing Gear Fixing Piece (Rear Left)",
+    "category": "Шасси",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2684,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_057.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003465",
+    "name": "Крепление шасси к раме T50 переднее левое",
+    "name_en": "Landing Gear Fixing Piece (Front Left)",
+    "category": "Шасси",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2684,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_058.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003464",
+    "name": "Крепление шасси к раме T50 переднее правое",
+    "name_en": "Landing Gear Fixing Piece (Front Right)",
+    "category": "Шасси",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2684,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_059.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003468",
+    "name": "Тройник крепления перекладины шасси T50",
+    "name_en": "Landing Gear Y-tee Part",
+    "category": "Шасси",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1220,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_060.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003558",
+    "name": "Резиновая опора шасси",
+    "name_en": "Landing Gear Bottom Rubber Pad",
+    "category": "Шасси",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1647,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_061.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000691",
+    "name": "Плата распределения питания Agras T50",
+    "name_en": "Power Distribution Board Module",
+    "category": "Электроника и управление",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 22143,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_062.jpg"
+  },
+  {
+    "sku": "YC.XC.XX001001",
+    "name": "Интерфейсный кабель системы распыления Agras T50",
+    "name_en": "Spraying Adaptive Cable",
+    "category": "Кабели и разъёмы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 3111,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_063.jpg"
+  },
+  {
+    "sku": "YC.JG.MY001057",
+    "name": "Резиновый рукав Agras T50",
+    "name_en": "Adaptive Cable Rubber Sleeve",
+    "category": "Кабели и разъёмы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 1708,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_064.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000685",
+    "name": "Металлический соединитель луча M3",
+    "name_en": "M3 Aircraft Arm Connector",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 10004,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_065.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000684",
+    "name": "Металлический соединитель луча M2",
+    "name_en": "M2 Aircraft Arm Connector",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 10004,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_066.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000686",
+    "name": "Металлический соединитель луча M4",
+    "name_en": "M4 Aircraft Arm Connector",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 10004,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_067.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000683",
+    "name": "Металлический соединитель луча M1",
+    "name_en": "M1 Aircraft Arm Connector",
+    "category": "Лучи и моторные узлы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 10004,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_068.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000671",
+    "name": "Фронтальный сенсор (бинокулярная камера) с кабелем",
+    "name_en": "Forward Vision Sensor Module",
+    "category": "Радары, датчики и камеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 10126,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_069.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000681",
+    "name": "Камера FPV Agras T50",
+    "name_en": "FPV Camera Module",
+    "category": "Радары, датчики и камеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 37088,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_070.jpg"
+  },
+  {
+    "sku": "YC.DZ.AA000326",
+    "name": "Антенна SDR перед",
+    "name_en": "SDR Antenna (Front)",
+    "category": "Электроника и управление",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2196,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_071.jpg"
+  },
+  {
+    "sku": "YC.JG.ZS003425",
+    "name": "Кронштейн FPV-камеры",
+    "name_en": "FPV Camera Bracket",
+    "category": "Электроника и управление",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 4880,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_072.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000939.02.F",
+    "name": "Передний радар Agras T50",
+    "name_en": "Forward Radar Module",
+    "category": "Радары, датчики и камеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 121146,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_073.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000940.02.F",
+    "name": "Задний радар Agras T50",
+    "name_en": "Rear Radar Module",
+    "category": "Радары, датчики и камеры",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 114802,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_074.jpg"
+  },
+  {
+    "sku": "YC.XC.XX001012",
+    "name": "Сигнальный кабель заднего радара обзора",
+    "name_en": "Rear Vision Radar Signal Cable",
+    "category": "Кабели и разъёмы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 5917,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_075.jpg"
+  },
+  {
+    "sku": "DJI-TOOL-KIT",
+    "name": "Набор инструментов DJI",
+    "name_en": "DJI Tool Kit",
+    "category": "Инструменты",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 4148,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_076.jpg"
+  },
+  {
+    "sku": "MOTOR-BEARINGS",
+    "name": "Подшипник мотора DJI T20P/T25/T25P/T40/T50",
+    "name_en": "Motor Bearings Assembly",
+    "category": "Моторы и приводы",
+    "compatibility": [
+      "T40",
+      "T50"
+    ],
+    "price": 1647,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_077.jpg"
+  },
+  {
+    "sku": "MOTOR-TOOL",
+    "name": "Съемник для мотора",
+    "name_en": "Motor Tool",
+    "category": "Инструменты",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 9272,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_078.jpg"
+  },
+  {
+    "sku": "MOTOR-BASE",
+    "name": "Стойка двигателя",
+    "name_en": "Motor Base",
+    "category": "Моторы и приводы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 2623,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_079.jpg"
+  },
+  {
+    "sku": "MOTOR-SCREW",
+    "name": "Верхняя гайка мотора",
+    "name_en": "Motor Screw",
+    "category": "Моторы и приводы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 610,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_080.jpg"
+  },
+  {
+    "sku": "MOTOR-LOCK-RING",
+    "name": "Стопорное кольцо мотора",
+    "name_en": "Lock ring",
+    "category": "Моторы и приводы",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 244,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_081.jpg"
+  },
+  {
+    "sku": "BOLTS-70",
+    "name": "Набор болтов и гаек, 70 предметов",
+    "name_en": "Bolts and screws kit 70 pieces",
+    "category": "Крепёж",
+    "compatibility": [
+      "T50"
+    ],
+    "price": 5978,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_082.jpg"
+  },
+  {
+    "sku": "YC.DZ.AA000253",
+    "name": "Внешняя SDR-антенна DJI Agras T40/T20P/T50 (RC RM700)",
+    "name_en": "Agras T40/T50 RC RM700 Antennas",
+    "category": "Пульт управления",
+    "compatibility": [
+      "T40",
+      "T50",
+      "RC Plus / RM700"
+    ],
+    "price": 3050,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_083.jpg"
+  },
+  {
+    "sku": "BC.AG.SS000595",
+    "name": "Передняя панель пульта управления Agras T40/T50 RC RM700",
+    "name_en": "RC RM700 Cover",
+    "category": "Пульт управления",
+    "compatibility": [
+      "T40",
+      "T50",
+      "RC Plus / RM700"
+    ],
+    "price": 33977,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_084.jpg"
+  },
+  {
+    "sku": "CP.BX.000229",
+    "name": "Интеллектуальная батарея WB37",
+    "name_en": "WB37 Battery",
+    "category": "Аккумулятор и питание",
+    "compatibility": [
+      "T40",
+      "T50",
+      "RC Plus / RM700"
+    ],
+    "price": 8723,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_085.jpg"
+  },
+  {
+    "sku": "6941565922618",
+    "name": "Зарядная станция для батареи WB37 (USB-C)",
+    "name_en": "DJI Charging Station WB37",
+    "category": "Аккумулятор и питание",
+    "compatibility": [
+      "T40",
+      "T50",
+      "RC Plus / RM700"
+    ],
+    "price": 8357,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_086.jpg"
+  },
+  {
+    "sku": "CP.MA.00000467.01",
+    "name": "Блок питания USB-C 65W",
+    "name_en": "Portable Charger 65W USB-C",
+    "category": "Пульт управления",
+    "compatibility": [
+      "T40",
+      "T50",
+      "RC Plus / RM700"
+    ],
+    "price": 5490,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_087.jpg"
+  },
+  {
+    "sku": "STICKS-RM700",
+    "name": "Стики для пульта RM700",
+    "name_en": "Sticks",
+    "category": "Пульт управления",
+    "compatibility": [
+      "T40",
+      "T50",
+      "RC Plus / RM700"
+    ],
+    "price": 2745,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_088.jpg"
+  },
+  {
+    "sku": "STIKRM700",
+    "name": "Механизм стиков Agras T40/T50 (пульт RM700)",
+    "name_en": "Sticks mechanism right/left",
+    "category": "Пульт управления",
+    "compatibility": [
+      "T40",
+      "T50",
+      "RC Plus / RM700"
+    ],
+    "price": 8906,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_089.jpg"
+  },
+  {
+    "sku": "IGNITION-COIL-D12000I",
+    "name": "Катушка зажигания D12000i",
+    "name_en": "Generator Ignition Coil",
+    "category": "Генератор D12000i",
+    "compatibility": [
+      "D12000i / D12500"
+    ],
+    "price": 3538,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_090.jpg"
+  },
+  {
+    "sku": "FUEL-INJECTOR-D12000I",
+    "name": "Форсунка топливная D12000I",
+    "name_en": "Generator Fuel Injector",
+    "category": "Генератор D12000i",
+    "compatibility": [
+      "D12000i / D12500"
+    ],
+    "price": 2989,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_091.jpg"
+  },
+  {
+    "sku": "FuelPUMPD12500",
+    "name": "Топливный насос зарядного устройства D12000/D12500",
+    "name_en": "Fuel Pump Assembly",
+    "category": "Генератор D12000i",
+    "compatibility": [
+      "D12000i / D12500"
+    ],
+    "price": 10126,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_092.jpg"
+  },
+  {
+    "sku": "AIR-FILTER-D12000I-BLUE",
+    "name": "Фильтр воздушный D12000i Blue",
+    "name_en": "Air Filter 12000 Blue",
+    "category": "Генератор D12000i",
+    "compatibility": [
+      "D12000i / D12500"
+    ],
+    "price": 793,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_093.jpg"
+  },
+  {
+    "sku": "AIR-FILTER-D12000I-RED",
+    "name": "Фильтр воздушный D12000i Red",
+    "name_en": "Air Filter 12000 RED",
+    "category": "Генератор D12000i",
+    "compatibility": [
+      "D12000i / D12500"
+    ],
+    "price": 793,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_094.jpg"
+  },
+  {
+    "sku": "FUEL-PUMP-FILTER-D12000I",
+    "name": "Фильтр топливного насоса DJI D12000i",
+    "name_en": "Fuel Pump Filter",
+    "category": "Генератор D12000i",
+    "compatibility": [
+      "D12000i / D12500"
+    ],
+    "price": 1159,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_095.jpg"
+  },
+  {
+    "sku": "D12000I-DAMPING-BASE",
+    "name": "Подушка двигателя DJI D12000i",
+    "name_en": "Generator Frame Damping Base",
+    "category": "Генератор D12000i",
+    "compatibility": [
+      "D12000i / D12500"
+    ],
+    "price": 488,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_096.jpg"
+  },
+  {
+    "sku": "D12000I-SPARK-PLUG",
+    "name": "Свеча зажигания D12000i",
+    "name_en": "Generator Spark Plug",
+    "category": "Генератор D12000i",
+    "compatibility": [
+      "D12000i / D12500"
+    ],
+    "price": 976,
+    "currency": "RUB",
+    "vat_included": true,
+    "stock": null,
+    "photo": "assets/photos/part_097.jpg"
+  }
+];
+const fmt=n=>new Intl.NumberFormat('ru-RU',{style:'currency',currency:'RUB',maximumFractionDigits:2}).format(n);
+let cart=JSON.parse(localStorage.getItem('agrasCart')||'{}');
+const q=document.querySelector('#q'),cat=document.querySelector('#cat'),sort=document.querySelector('#sort');
+const cats=[...new Set(parts.map(x=>x.category))].sort();
+cats.forEach(c=>{cat.insertAdjacentHTML('beforeend',`<option>${c}</option>`);});
+function renderCats(){document.querySelector('#cats').innerHTML=cats.map(c=>`<div class="cat" onclick="cat.value=${JSON.stringify(c)};render()">${c}<b>${parts.filter(x=>x.category===c).length}</b></div>`).join('')}
+function render(){let a=parts.filter(x=>{let s=(x.sku+' '+x.name+' '+x.name_en).toLowerCase();return s.includes(q.value.toLowerCase())&&(!cat.value||x.category===cat.value)});
+if(sort.value==='priceUp')a.sort((x,y)=>x.price-y.price);if(sort.value==='priceDown')a.sort((x,y)=>y.price-x.price);if(sort.value==='name')a.sort((x,y)=>x.name.localeCompare(y.name));
+document.querySelector('#result').textContent=`Найдено: ${a.length}`;document.querySelector('#count').textContent=`${parts.length} позиций`;
+document.querySelector('#grid').innerHTML=a.length?a.map(x=>`<article class="card"><div class="photo">${x.photo?`<img src="${x.photo}" alt="${x.name}" loading="lazy">`:'<span class="small">Фото нет</span>'}</div><div class="photo-note">Фото из предоставленного прайс-листа</div><span class="tag">${x.category}</span><div class="sku">${x.sku}</div><div class="name">${x.name}</div><div class="en">${x.name_en}</div><div class="compat">Совместимость: <b>${x.compatibility.join(', ')}</b></div><div class="bottom"><div><div class="price">${fmt(x.price)}</div><div class="small">цена с НДС · наличие уточняется</div></div><button class="primary" onclick="add('${x.sku}')">В корзину</button></div></article>`).join(''):`<div class="empty">По вашему запросу ничего не найдено.</div>`}
+function add(s){cart[s]=(cart[s]||0)+1;localStorage.setItem('agrasCart',JSON.stringify(cart));updateCart()}
+function updateCart(){document.querySelector('#cartCount').textContent=Object.values(cart).reduce((a,b)=>a+b,0)}
+[q,cat,sort].forEach(e=>e.addEventListener('input',render));document.querySelector('#clear').onclick=()=>{q.value='';cat.value='';sort.value='default';render()};renderCats();render();updateCart();
+</script></body></html>
